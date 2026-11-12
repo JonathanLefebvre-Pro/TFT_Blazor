@@ -5,7 +5,7 @@ using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddScoped<IMovieRepository, MovieService>();
+builder.Services.AddSingleton<IMovieRepository, MovieService>();
 
 builder.Services.AddControllers();
 

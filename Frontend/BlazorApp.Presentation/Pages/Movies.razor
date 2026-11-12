@@ -1,9 +1,11 @@
 @page "/movies"
-@inject IHttpClientFactory clientFactory;
-@inject IMoviesRepository moviesService;
 @using BlazorApp.AppCore.Abstraction.Repositories
+@using BlazorApp.Domain.Dtos
 @using BlazorApp.Domain.Entities
 @using BlazorApp.Presentation.Components;
+@inject IMoviesRepository moviesService;
+
+<a href="/movies/add">Add a new movie</a>
 
 <table class="table table-striped">
     <thead class="thead-dark">
@@ -30,7 +32,28 @@
 
     protected override async Task OnInitializedAsync()
     {
-        IEnumerable<Movie> movies = await moviesService.GetMovies();
+        IEnumerable<MovieRequestDto> moviesDto = await moviesService.GetMovies();
+        List<Movie> movies = new List<Movie>();
+        if(moviesDto.Count() > 0)
+        {
+            foreach(MovieRequestDto dto in moviesDto)
+            {
+                movies.Add(new Movie(
+                    dto.Id,
+                    dto.Title, 
+                    dto.ReleaseDate,
+                    dto.Description,
+                    dto.Score,
+                    dto.Duration,
+                    dto.ImageUrl,
+                    dto.Directors,
+                    dto.Writers,
+                    dto.Actors,
+                    dto.Categories
+                ));
+            }
+        }
+
         MovieItems = movies;
     }
 

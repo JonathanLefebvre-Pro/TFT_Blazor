@@ -18,10 +18,6 @@ namespace BlazorApp.Presentation
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
             });
 
-            //builder.Services.AddSingleton<IList<Movie>>(sp => MovieBuilder.BuildMovies());
-
-            //builder.Services.AddScoped<IMoviesRepository, MoviesService>();
-
             await builder.Build().RunAsync();
         }
     }

@@ -1,0 +1,138 @@
+@page "/movies/add"
+@using System.ComponentModel.DataAnnotations
+@using BlazorApp.AppCore.Abstraction.Repositories
+@using BlazorApp.Domain.Dtos
+@using BlazorApp.Domain.Entities
+@inject IMoviesRepository moviesService;
+@inject ILogger<AddMovie> Logger
+
+<EditForm OnValidSubmit="OnSubmitForm" Model="Form">
+    <DataAnnotationsValidator/>
+    <div class="form-group row mb-1">
+        <label class="col-sm-3 col-form-label">Title : 
+            <InputText class="form-control" @bind-Value="Form.Title"/>
+        </label>
+        <ValidationMessage For="() => Form.Title"/>
+    </div>
+    <div class="form-group row mb-1">
+        <label class="col-sm-3 col-form-label">Release date : 
+            <InputDate class="form-control" @bind-Value="Form.ReleaseDate"/>
+        </label>
+        <ValidationMessage For="() => Form.ReleaseDate"/>
+    </div>
+    <div class="form-group row mb-1">
+        <label class="col-sm-3 col-form-label">Description : 
+            <InputTextArea class="form-control" @bind-Value="Form.Description"/>
+        </label>
+        <ValidationMessage For="() => Form.Description"/>
+    </div>
+    <div class="form-group row mb-1">
+        <label class="col-sm-3 col-form-label">Score : 
+            <InputNumber class="form-control" @bind-Value="Form.Score"/>
+        </label>
+        <ValidationMessage For="() => Form.Score"/>
+    </div>
+    <div class="form-group row mb-1">
+        <label class="col-sm-3 col-form-label">Duration : 
+            <InputNumber class="form-control" @bind-Value="Form.Duration"/>
+        </label>
+        <ValidationMessage For="() => Form.Duration"/>
+    </div>
+    <div class="form-group row mb-1">
+        <label class="col-sm-3 col-form-label">Image url : 
+            <InputText class="form-control" @bind-Value="Form.ImageUrl"/>
+        </label>
+        <ValidationMessage For="() => Form.ImageUrl"/>
+    </div>
+    <div class="form-group row mb-1">
+        <label class="col-sm-3 col-form-label">Directors : 
+
+        @foreach(PersonForm person in Form.Directors)
+        {
+            <div class="form-group row mb-1">
+                <label class="col-sm-3 col-form-label">FirstName : 
+                    <InputText class="form-control" @bind-Value="person.FirstName"/>
+                </label>
+                <input type="button" @onclick="() => RemoveDirector(person.Id)" value="Add a director" class="btn btn-primary col-sm-3 col-form-label" />
+            </div>
+        }
+        </label>
+        <ValidationMessage For="() => Form.Directors"/>
+        <input type="button" @onclick="AddDirector" value="Add a director" class="btn btn-primary col-sm-3 col-form-label" />
+    </div>
+    <input type="submit" disabled="@(!context.Validate())" class="btn btn-primary" />
+</EditForm>
+
+@code
+{
+    private AddMovieForm Form { get; set; } = default!;
+
+    protected override void OnInitialized()
+    {
+        Form = new AddMovieForm();
+    }
+
+    private void AddDirector()
+    {
+        Form.Directors.Append(new PersonForm());
+    }
+
+    private void RemoveDirector(int id)
+    {
+        Form.Directors.RemoveAt(id);
+    }
+
+    private async Task OnSubmitForm()
+    {
+        /*Logger.LogInformation("Submit form");
+        CreateMovieDto dto = new CreateMovieDto()
+        {
+            Title = Form.Title,
+            ReleaseDate = Form.ReleaseDate,
+            Description = Form.Description,
+            Score = Form.Score,
+            Duration = Form.Duration,
+            ImageUrl = Form.ImageUrl,
+            Directors = Form.Directors,
+            Writers = Form.Writers,
+            Actors = Form.Actors,
+            Categories = Form.Categories
+            };
+        int newId = await moviesService.CreateMovie(dto);
+        Logger.LogInformation("New Movie created : {Id}", newId);*/
+    }
+
+    private class AddMovieForm
+    {
+        [Required]
+        [MinLength(1)]
+        public string Title { get; set; } = string.Empty;
+        [Required]
+        public DateOnly ReleaseDate { get; set; }
+        [MaxLength(255)]
+        public string Description { get; set; } = string.Empty;
+        [Range(1, 10)]
+        public float Score { get; set; }
+        [Required]
+        public int Duration { get; set; }
+        public string ImageUrl { get; set; } = string.Empty;
+        public List<PersonForm> Directors { get; set; } = new List<PersonForm>();
+        public List<PersonForm> Writers { get; set; } = new List<PersonForm>();
+        public List<PersonForm> Actors { get; set; } = new List<PersonForm>();
+        public List<string> Categories { get; set; } = new List<string>();
+    }
+
+    private class PersonForm
+    {
+        public int Id { get; init; } = 0;
+        [Required]
+        public string FirstName { get; set; } = string.Empty;
+        [Required]
+        public string LastName { get; set; } = string.Empty;
+
+        public PersonForm()
+        {
+            Id++;
+        }
+    }
+}

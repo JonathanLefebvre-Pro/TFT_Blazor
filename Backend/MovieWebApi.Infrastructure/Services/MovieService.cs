@@ -207,17 +207,49 @@ public class MovieService : IMovieRepository
         }
         ]
         """;
+    private static List<Movie> Movies = new List<Movie>();
 
-    public async Task<IEnumerable<Movie>> GetMovies()
+    public MovieService()
     {
-        List<Movie> movies = new List<Movie>();
         List<Movie>? m = JsonSerializer.Deserialize<List<Movie>>(
             JSON_DATA_MOVIES,
             JsonSerializerOptions.Web
         );
         if (m is not null)
-            movies.AddRange(m);
+            Movies.AddRange(m);
+    }
 
-        return movies;
+    public async Task<IEnumerable<Movie>> Get()
+    {
+        return Movies;
+    }
+
+    public async Task<Movie?> Get(int id)
+    {
+        return Movies.Where(m => m.Id == id).FirstOrDefault();
+    }
+
+    public async Task<int> Add(Movie movie)
+    {
+        movie.Id = Movies.Count() + 1;
+        Movies.Add(movie);
+        return movie.Id;
+    }
+
+    public async Task<bool> Delete(int id)
+    {
+        Movie? movie = Movies.Where(m => m.Id == id).FirstOrDefault();
+        if (movie is null)
+            return false;
+        else
+        {
+            int index = Movies.FindIndex(m => m.Id == id);
+
+            if (index is <= 0)
+                return false;
+
+            Movies.RemoveAt(index);
+            return true;
+        }
     }
 }
