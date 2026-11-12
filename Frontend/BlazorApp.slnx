@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="BlazorApp.AppCore/BlazorApp.AppCore.csproj" />
+  <Project Path="BlazorApp.Domain/BlazorApp.Domain.csproj" />
+  <Project Path="BlazorApp.Infrastructure/BlazorApp.Infrastructure.csproj" />
+  <Project Path="BlazorApp.Presentation/BlazorApp.Presentation.csproj" />
+</Solution>

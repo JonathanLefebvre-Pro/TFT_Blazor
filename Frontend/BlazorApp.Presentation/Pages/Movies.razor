@@ -1,0 +1,41 @@
+@page "/movies"
+@inject IHttpClientFactory clientFactory;
+@inject IMoviesRepository moviesService;
+@using BlazorApp.AppCore.Abstraction.Repositories
+@using BlazorApp.Domain.Entities
+@using BlazorApp.Presentation.Components;
+
+<table class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Title</th>
+            <th scope="col">Release Date</th>
+            <th scope="col">Duration</th>
+            <th scope="col">Score</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Movie m in MovieItems)
+        {
+            <MovieTableRow MovieItem="@m" OnDisplayDetails="handleDisplayDetails" />
+        }
+    </tbody>
+</table>
+
+@code
+{
+    public IEnumerable<Movie> MovieItems { get; set; } = Enumerable.Empty<Movie>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        IEnumerable<Movie> movies = await moviesService.GetMovies();
+        MovieItems = movies;
+    }
+
+    protected void handleDisplayDetails(int id)
+    {
+        Console.WriteLine("Display details for :" + id);
+    }
+}

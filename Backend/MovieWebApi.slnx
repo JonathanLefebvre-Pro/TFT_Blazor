@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="MovieWebApi.AppCore/MovieWebApi.AppCore.csproj" />
+  <Project Path="MovieWebApi.Domain/MovieWebApi.Domain.csproj" />
+  <Project Path="MovieWebApi.Infrastructure/MovieWebApi.Infrastructure.csproj" />
+  <Project Path="MovieWebApi/MovieWebApi.csproj" />
+</Solution>
