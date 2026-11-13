@@ -1,24 +1,23 @@
 using System.Net.Http.Json;
 using BlazorApp.AppCore.Abstraction.Repositories;
-using BlazorApp.Domain.Dtos;
-using BlazorApp.Domain.Entities;
+using BlazorApp.AppCore.Dtos;
 using Microsoft.Extensions.Logging;
 
 namespace BlazorApp.Infrastructure.Services;
 
 public class MoviesService(HttpClient Client, ILogger<MoviesService> Logger) : IMoviesRepository
 {
-    public async Task<IEnumerable<MovieRequestDto>> GetMovies()
+    public async Task<IEnumerable<MovieDto>> GetMovies()
     {
         //Call web api
-        return await Client.GetFromJsonAsync<IEnumerable<MovieRequestDto>>("/movies/get")
-            ?? Enumerable.Empty<MovieRequestDto>();
+        return await Client.GetFromJsonAsync<IEnumerable<MovieDto>>("/movies/getallasync")
+            ?? Enumerable.Empty<MovieDto>();
     }
 
-    public async Task<int> CreateMovie(CreateMovieDto movie)
+    public async Task<int> CreateMovie(AddMovieDto movie)
     {
-        HttpResponseMessage response = await Client.PostAsJsonAsync<CreateMovieDto>(
-            "/movies/create",
+        HttpResponseMessage response = await Client.PostAsJsonAsync<AddMovieDto>(
+            "/movies/addasync",
             movie
         );
         if (response.IsSuccessStatusCode)

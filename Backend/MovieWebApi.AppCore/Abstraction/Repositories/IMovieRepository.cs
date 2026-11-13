@@ -1,11 +1,11 @@
 using MovieWebApi.Domain.Entities;
 
-namespace MovieWebApi.Abstraction;
+namespace MovieWebApi.AppCore.Abstraction.Repositories;
 
 public interface IMovieRepository
 {
-    Task<IEnumerable<Movie>> Get();
-    Task<Movie?> Get(int id);
-    Task<int> Add(Movie movie);
-    Task<bool> Delete(int id);
+    Task<IEnumerable<Movie>> GetAllAsync();
+    Task<Movie?> GetByIdAsync(int id);
+    Task<int> AddAsync(Movie movie);
+    Task<bool> DeleteAsync(int id);
 }

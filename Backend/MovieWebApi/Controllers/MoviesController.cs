@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using MovieWebApi.Abstraction;
+using MovieWebApi.AppCore.Abstraction.Repositories;
 using MovieWebApi.Domain.Entities;
 using MovieWebApi.Dtos;
+using MovieWebApi.Mappers;
 
 namespace MovieWebApi.Controllers;
 
@@ -9,47 +10,33 @@ namespace MovieWebApi.Controllers;
 [Route("[controller]")]
 public class MoviesController(IMovieRepository MovieService) : ControllerBase
 {
-    [Route("Get")]
+    [Route("GetAllAsync")]
     [HttpGet]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> GetAllAsync()
     {
-        IEnumerable<Movie> movies = await MovieService.Get();
+        IEnumerable<Movie> movies = await MovieService.GetAllAsync();
         if (movies is null || movies.Count() is 0)
             return this.NotFound();
 
-        return this.Ok(movies);
+        return this.Ok(movies.ToDtos());
     }
 
-    [Route("Get/{id}")]
+    [Route("GetByIdAsync/{id}")]
     [HttpGet]
-    public async Task<IActionResult> Get(int id)
+    public async Task<IActionResult> GetByIdAsync(int id)
     {
-        Movie? movie = await MovieService.Get(id);
+        Movie? movie = await MovieService.GetByIdAsync(id);
         if (movie is null)
             return this.NotFound();
 
-        return this.Ok(movie);
+        return this.Ok(movie.ToDto());
     }
 
-    [Route("Create")]
+    [Route("AddAsync")]
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateMovieDto movieDto)
+    public async Task<IActionResult> AddAsync([FromBody] AddMovieDto dto)
     {
-        Movie movie = new Movie()
-        {
-            Title = movieDto.Title,
-            ReleaseDate = movieDto.ReleaseDate,
-            Description = movieDto.Description,
-            Score = movieDto.Score,
-            Duration = movieDto.Duration,
-            ImageUrl = movieDto.ImageUrl,
-            Directors = movieDto.Directors,
-            Writers = movieDto.Writers,
-            Actors = movieDto.Actors,
-            Categories = movieDto.Categories,
-        };
-
-        int result = await MovieService.Add(movie);
+        int result = await MovieService.AddAsync(dto.ToEntity());
         return result != 0 ? this.Ok(result) : this.BadRequest();
     }
 }

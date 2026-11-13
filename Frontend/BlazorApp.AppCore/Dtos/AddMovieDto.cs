@@ -1,8 +1,8 @@
 using BlazorApp.Domain.Entities;
 
-namespace BlazorApp.Domain.Dtos;
+namespace BlazorApp.AppCore.Dtos;
 
-public class CreateMovieDto
+public class AddMovieDto
 {
     public required string Title { get; init; }
     public DateOnly? ReleaseDate { get; init; }

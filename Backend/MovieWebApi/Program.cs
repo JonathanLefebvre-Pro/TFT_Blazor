@@ -1,11 +1,12 @@
-using MovieWebApi.Abstraction;
+using MovieWebApi.AppCore.Abstraction.Repositories;
 using MovieWebApi.Infrastructure.Services;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddSingleton<IMovieRepository, MovieService>();
+builder.Services.AddSingleton<IMovieDataContext, MovieDataContext>();
+builder.Services.AddScoped<IMovieRepository, MovieService>();
 
 builder.Services.AddControllers();
 

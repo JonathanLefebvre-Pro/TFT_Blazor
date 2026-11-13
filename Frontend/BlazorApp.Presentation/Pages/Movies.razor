@@ -1,8 +1,12 @@
 @page "/movies"
+
 @using BlazorApp.AppCore.Abstraction.Repositories
-@using BlazorApp.Domain.Dtos
+@using BlazorApp.AppCore.Dtos
+@using BlazorApp.AppCore.Mappers
 @using BlazorApp.Domain.Entities
-@using BlazorApp.Presentation.Components;
+@using BlazorApp.Presentation.Components
+@using BlazorApp.Presentation.Mappers
+
 @inject IMoviesRepository moviesService;
 
 <a href="/movies/add">Add a new movie</a>
@@ -32,29 +36,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        IEnumerable<MovieRequestDto> moviesDto = await moviesService.GetMovies();
-        List<Movie> movies = new List<Movie>();
-        if(moviesDto.Count() > 0)
-        {
-            foreach(MovieRequestDto dto in moviesDto)
-            {
-                movies.Add(new Movie(
-                    dto.Id,
-                    dto.Title, 
-                    dto.ReleaseDate,
-                    dto.Description,
-                    dto.Score,
-                    dto.Duration,
-                    dto.ImageUrl,
-                    dto.Directors,
-                    dto.Writers,
-                    dto.Actors,
-                    dto.Categories
-                ));
-            }
-        }
-
-        MovieItems = movies;
+        IEnumerable<MovieDto> moviesDto = await moviesService.GetMovies();
+        MovieItems = moviesDto.ToEntities();
     }
 
     protected void handleDisplayDetails(int id)

@@ -1,43 +1,66 @@
 @using BlazorApp.Domain.Entities
 @using BlazorApp.AppCore.Utilities
 
-@if (MovieItem is not null)
-{
-    <tr>
-        <th scope="row">@MovieItem?.Id</th>
-        <td>@MovieItem?.Title</td>
-        <td>@MovieItem?.ReleaseDate</td>
+<tr>
+    <th scope="row">@MovieItem?.Id</th>
+    <td>@MovieItem?.Title</td>
+    <td>@MovieItem?.ReleaseDate</td>
 
-        @{
-            <td>@DateBuilder.ConvertSecondsToDateString(Convert.ToDouble(MovieItem?.Duration))</td>
-        }
-        <td>@MovieItem?.Score/10</td>
-        <td><button class="btn btn-primary" @onclick="onDetailBtnClicked">Details</button></td>
-    </tr>
-    @if (displayDetailPanel)
-    {
-        <div class="details">
-            <div class="d-flex">
-                <p class="m-0 me-2">Categories :</p>
-                @if (MovieItem?.Categories is not null)
-                {
-                    <div class="d-flex gap-2">
-                        @foreach (string c in MovieItem.Categories)
-                        {
-                            <span>@c</span>
-                        }
-                    </div>
-                }
-            </div>
-            <p>Description : @MovieItem?.Description</p>
-        </div>
+    @{
+        <td>@DateBuilder.ConvertSecondsToDateString(Convert.ToDouble(MovieItem?.Duration))</td>
     }
+    <td>@MovieItem?.Score/10</td>
+    <td><button class="btn btn-primary" @onclick="onDetailBtnClicked">Details</button></td>
+</tr>
+@if (displayDetailPanel)
+{
+    <div class="details">
+        <div class="d-flex">
+            <p class="m-0 me-2">Categories :</p>
+            @if (MovieItem?.Categories is not null)
+            {
+                <div class="d-flex gap-2">
+                    @foreach (string c in MovieItem.Categories)
+                    {
+                        <span>@c</span>
+                    }
+                </div>
+            }
+        </div>
+        <p>Description : @MovieItem?.Description</p>
+        <div class="d-flex">
+            <p class="m-0 me-2">Directors :</p>
+            @if (MovieItem?.Directors is not null)
+            {
+                <div class="d-flex gap-2">
+                    @foreach (Person p in MovieItem.Directors)
+                    {
+                        <span>@p.FirstName</span>
+                        <span>@p.LastName</span>
+                    }
+                </div>
+            }
+        </div>
+        <div class="d-flex">
+            <p class="m-0 me-2">Writers :</p>
+            @if (MovieItem?.Writers is not null)
+            {
+                <div class="d-flex gap-2">
+                    @foreach (Person p in MovieItem.Writers)
+                    {
+                        <span>@p.FirstName</span>
+                        <span>@p.LastName</span>
+                    }
+                </div>
+            }
+        </div>
+    </div>
 }
 
 @code
 {
     [Parameter]
-    public Movie? MovieItem { get; set; }
+    public Movie MovieItem { get; set; } = default!;
 
     [Parameter]
     public EventCallback<int> OnDisplayDetails { get; set; }
@@ -47,6 +70,6 @@
     protected void onDetailBtnClicked()
     {
         displayDetailPanel = !displayDetailPanel;
-        OnDisplayDetails.InvokeAsync(MovieItem.Id);
+        OnDisplayDetails.InvokeAsync(MovieItem!.Id);
     }
 }
